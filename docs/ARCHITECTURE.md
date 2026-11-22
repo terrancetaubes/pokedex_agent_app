@@ -16,6 +16,8 @@ Tools run in-process, in `src/pokedex_agent/tools/`. The PokeAPI species tool ca
 
 Not chosen yet. Options: Microsoft Agent Framework or Semantic Kernel (Azure-supported, larger), plain Python with the model API (small, you build orchestration), or LangGraph (explicit graphs, another vendor). A human decides before the agent code is written.
 
-## Open item: caller authentication
+## Caller authentication (implemented, not yet deployed)
 
-The backend will call `/v1/chat` with a managed identity token. The agent app must validate that token. That needs an app registration with an identifier URI for the agent app, and the backend's `AGENT_APP_SCOPE` must match it. Neither exists yet.
+`/v1/chat` requires a managed identity token. `src/pokedex_agent/auth.py` checks the signature (JWKS of the tenant), the issuer (v2), the audience (`AGENT_AUTH_AUDIENCE`), the expiry, and that the caller (`azp` or `appid`) is in `AGENT_ALLOWED_CALLER_APP_IDS`. If the settings are missing, every call gets 503.
+
+It still needs an app registration `pokedex-agent` with an identifier URI `api://pokedex-agent`. The backend's `AGENT_APP_SCOPE` must match it. The app registration is not created yet. It belongs in `pokedex_infra/identity/entra.bicep`.
