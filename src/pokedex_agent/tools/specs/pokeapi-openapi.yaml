@@ -1,0 +1,74 @@
+# REFERENCE ONLY. This spec described the former HTTP Function endpoint.
+# The tool now runs in-process: see src/pokedex_agent/tools/pokeapi_tool.py.
+# The server URL below is obsolete and must not be used.
+openapi: 3.0.3
+info:
+  title: Pokemon PokeAPI Species Traits
+  version: 1.1.0
+  description: Returns one Pokemon species trait record from the PokeAPI GraphQL endpoint.
+servers:
+  - url: https://<YOUR_FUNCTION_APP_NAME>.azurewebsites.net/api
+paths:
+  /pokeapi/{pokeapi_id}:
+    get:
+      operationId: getPokemonSpeciesTraits
+      summary: Get Pokemon species traits
+      description: >-
+        Returns the species record for the supplied PokeAPI species ID.
+        The ID is passed to the PokeAPI GraphQL pokemonspecies query.
+      parameters:
+        - name: pokeapi_id
+          in: path
+          required: true
+          description: Positive PokeAPI species ID.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        "200":
+          description: Species traits returned successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  is_baby:
+                    type: boolean
+                  is_legendary:
+                    type: boolean
+                  is_mythical:
+                    type: boolean
+                  has_gender_differences:
+                    type: boolean
+                  pokemoncolor:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                  pokemonshape:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                  pokemonhabitat:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                additionalProperties: true
+        "400":
+          description: Invalid Pokemon species ID.
+        "404":
+          description: Species ID not found.
+        "502":
+          description: PokeAPI GraphQL request failed.
+      security:
+        - functionKey: []
+components:
+  securitySchemes:
+    functionKey:
+      type: apiKey
+      in: header
+      name: x-functions-key

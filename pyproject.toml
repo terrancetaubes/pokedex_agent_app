@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pokedex-agent"
+version = "0.1.0"
+description = "Multi-agent Pokedex application"
+requires-python = ">=3.11"
+dependencies = [
+  "azure-identity>=1.17.1",
+  "fastapi>=0.111",
+  "pydantic>=2.7",
+  "requests>=2.32.3",
+  "uvicorn[standard]>=0.30",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.27",
+  "pytest>=8.0",
+  "ruff>=0.5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
