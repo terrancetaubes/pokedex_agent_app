@@ -4,7 +4,6 @@ from typing import Any
 
 import requests
 
-
 pokeapi_graphql_url = "https://graphql.pokeapi.co/v1beta2"
 
 query_template = """

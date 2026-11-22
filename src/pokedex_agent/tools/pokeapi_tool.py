@@ -45,7 +45,7 @@ TOOL_SPEC: dict[str, Any] = {
 def _validate_id(pokeapi_id: Any) -> int:
     # bool is a subclass of int in Python. Reject it explicitly.
     if isinstance(pokeapi_id, bool) or not isinstance(pokeapi_id, int):
-        raise ValueError("pokeapi_id must be an integer.")
+        raise TypeError("pokeapi_id must be an integer.")
     if pokeapi_id < 1:
         raise ValueError("pokeapi_id must be a positive integer.")
     return pokeapi_id
@@ -55,7 +55,7 @@ def run_tool(pokeapi_id: Any) -> dict[str, Any]:
     """Look up species traits. Return a result dict. See module docstring."""
     try:
         valid_id = _validate_id(pokeapi_id)
-    except ValueError as exc:
+    except (TypeError, ValueError) as exc:
         return {"ok": False, "error": str(exc)}
 
     try:
